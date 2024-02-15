@@ -104,6 +104,7 @@ const { developmentChains } = require("../helper-hardhat-config");
         assert.equal(eventParam.from, deployer.address);
         assert.equal(eventParam.to, user.address);
         assert.equal(eventParam.amount, 450);
+        assert.equal(eventParam.message, "I need Money");
       })
     });
     describe("Withdraw Collected Amount", () => {

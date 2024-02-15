@@ -26,7 +26,7 @@ contract Paypal{
   }
 
   event RequestCreated(address requestor, address requestedTo, request requestDetails);
-  event PaymentCompleted(address from, address to, uint256 amount);
+  event PaymentCompleted(address from, address to, uint256 amount, request requestDetail);
 
   mapping(address => userName) s_names;
   mapping(address => mapping(address => request)) requests;
@@ -63,7 +63,7 @@ contract Paypal{
     }
     delete requests[msg.sender][requestor];
     s_collectedAmount[requestor] = msg.value;
-    emit PaymentCompleted(msg.sender, requestor, msg.value);
+    emit PaymentCompleted(msg.sender, requestor, msg.value, requestDetail);
   }
 
   function withdrawAmountReceived() external {

@@ -8,7 +8,7 @@ error Paypal__NoBalanceToWithDraw();
 error Paypal__TransactionFailed();
 
 contract Paypal{
-  address public owner;
+  address owner;
   constructor(){
     owner = msg.sender;
   }
@@ -77,5 +77,21 @@ contract Paypal{
       s_collectedAmount[msg.sender] = amountReceived;
       revert Paypal__TransactionFailed();
     }
+  }
+
+  function getOwner() public view returns(address){
+    return owner;
+  }
+
+  function getName() public view returns(userName memory){
+    return s_names[msg.sender];
+  }
+
+  function getRequestDetails(address requestedTo, address requestedBy) public view returns(request memory){
+    return requests[requestedTo][requestedBy];
+  }
+
+  function getCollectedAmount() public view returns(uint256){
+    return s_collectedAmount[msg.sender];
   }
 }

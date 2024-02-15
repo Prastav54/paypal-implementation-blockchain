@@ -1,0 +1,12 @@
+node_modules
+.env
+coverage
+coverage.json
+
+#Hardhat files
+cache
+artifacts
+proposals.json
+.notes.md
+gas-report.txt
+deployments

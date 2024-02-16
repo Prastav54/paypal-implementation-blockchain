@@ -77,8 +77,10 @@ const { developmentChains } = require("../helper-hardhat-config");
     describe("Pay Request Other functionality Test", () => {
       beforeEach(async () => {
         paypal = paypalContract.connect(user);
+        await paypal.addName("User");
         await paypal.createRequest(deployer.address, 450, "I need Money");
         paypal = paypalContract.connect(deployer);
+        await paypal.addName("Deployer");
       });
       it ("Throws error if paid money is not equal to requested money", async () => {
         await expect(paypal.payRequest(user.address, {value: 780})).to.be.revertedWith("PayPal__NotCorrectAmount()")
@@ -105,6 +107,8 @@ const { developmentChains } = require("../helper-hardhat-config");
         assert.equal(eventParam.to, user.address);
         assert.equal(eventParam.amount, 450);
         assert.equal(eventParam.message, "I need Money");
+        assert.equal(eventParam.senderName, "Deployer");
+        assert.equal(eventParam.receiverName, "User");
       })
     });
     describe("Withdraw Collected Amount", () => {

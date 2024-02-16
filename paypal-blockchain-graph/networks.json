@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "Paypal": {
+      "address": "0x5B02C5947355520C1c8a3C888FF0A29cEc168BAd",
+      "startBlock": 5300279
+    }
+  }
+}

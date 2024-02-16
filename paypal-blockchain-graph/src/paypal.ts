@@ -1,41 +1,56 @@
+import { Bytes } from "@graphprotocol/graph-ts"
 import {
   PaymentCompleted as PaymentCompletedEvent,
   RequestCreated as RequestCreatedEvent
 } from "../generated/Paypal/Paypal"
-import { PaymentCompleted, RequestCreated } from "../generated/schema"
-
-export function handlePaymentCompleted(event: PaymentCompletedEvent): void {
-  let entity = new PaymentCompleted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.amount = event.params.amount
-  entity.message = event.params.message
-  entity.senderName = event.params.senderName
-  entity.receiverName = event.params.receiverName
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
+import { History, CurrentRequests } from "../generated/schema"
 
 export function handleRequestCreated(event: RequestCreatedEvent): void {
-  let entity = new RequestCreated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.requestor = event.params.requestor
-  entity.requestedTo = event.params.requestedTo
-  entity.requestDetails_amount = event.params.requestDetails.amount
-  entity.requestDetails_message = event.params.requestDetails.message
-  entity.requestDetails_name = event.params.requestDetails.name
-  entity.requestDetails_exists = event.params.requestDetails.exists
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  let currentRequest = CurrentRequests.load(generateIdForCreateRequest(event.params.requestor, event.params.requestedTo));
+  if (!currentRequest){
+    currentRequest = new CurrentRequests(generateIdForCreateRequest(event.params.requestor, event.params.requestedTo));
+  }
+  currentRequest.sender = event.params.requestor;
+  currentRequest.receiver = event.params.requestedTo;
+  currentRequest.amount = event.params.requestDetails.amount;
+  currentRequest.message = event.params.requestDetails.message;
+  currentRequest.senderName = event.params.requestDetails.name;
+  currentRequest.active = true;
+  currentRequest.save();
 }
+
+export function handlePaymentCompleted(event: PaymentCompletedEvent): void {
+  let currentRequest = CurrentRequests.load(generateIdForCreateRequest(event.params.to, event.params.from));
+  if (currentRequest){
+    currentRequest.active = false;
+    currentRequest.save();
+  }
+  let history = new History(generateIdForHistory());
+
+  // For Paying Account
+  history.ownAccountNumber = event.params.from;
+  history.otherAccountNumber = event.params.to;
+  history.otherAccountName = event.params.receiverName;
+  history.amount = event.params.amount;
+  history.action = "Send";
+  history.message = event.params.message;
+
+  // For Receiving Account
+  history.ownAccountNumber = event.params.to;
+  history.otherAccountNumber = event.params.from;
+  history.otherAccountName = event.params.senderName;
+  history.amount = event.params.amount;
+  history.action = "Receive";
+  history.message = event.params.message;
+
+  history.save();
+}
+
+function generateIdForCreateRequest(sender: Bytes, receiver: Bytes): string {
+  return `${sender}~~${receiver}`;
+}
+
+function generateIdForHistory(): string {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+

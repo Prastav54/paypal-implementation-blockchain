@@ -1,25 +1,19 @@
-type PaymentCompleted @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  amount: BigInt! # uint256
-  message: String! # string
-  senderName: String! # string
-  receiverName: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type CurrentRequests @entity {
+  id: ID!
+  sender: Bytes!
+  receiver: Bytes!
+  amount: BigInt!
+  message: String!
+  senderName: String
+  active: Boolean!
 }
 
-type RequestCreated @entity(immutable: true) {
-  id: Bytes!
-  requestor: Bytes! # address
-  requestedTo: Bytes! # address
-  requestDetails_amount: BigInt! # uint256
-  requestDetails_message: String! # string
-  requestDetails_name: String! # string
-  requestDetails_exists: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type History @entity {
+  id: ID!
+  ownAccountNumber: Bytes!
+  otherAccountNumber: Bytes!
+  otherAccountName: String
+  amount: BigInt!
+  message: String!
+  action: String!
 }

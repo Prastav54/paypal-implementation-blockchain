@@ -10,17 +10,30 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "3.5.10",
+    "antd": "^5.5.1",
+    "ethers": "^5.5.4",
+    "graphql": "^16.4.0",
+    "moralis": "^2.23.2",
+    "moralis-v1": "^1.13.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.7",
+    "react-moralis": "^1.4.0",
+    "react-router-dom": "^6.11.2",
+    "web3uikit": "^1.0.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
     "vite": "^5.1.0"
   }
 }

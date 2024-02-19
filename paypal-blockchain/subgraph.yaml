@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Paypal
-    network: sepolia
+    network: mumbai
     source:
-      address: "0x5B02C5947355520C1c8a3C888FF0A29cEc168BAd"
+      address: "0x995dD0767e870dd6bC128B92456e402eC8F3683C"
       abi: Paypal
-      startBlock: 5320605
+      startBlock: 46105964
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

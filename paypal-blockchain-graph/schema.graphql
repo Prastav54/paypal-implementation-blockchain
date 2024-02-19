@@ -1,5 +1,5 @@
-type CurrentRequests @entity {
-  id: ID!
+type CurrentRequest @entity {
+  id: String!
   sender: Bytes!
   receiver: Bytes!
   amount: BigInt!

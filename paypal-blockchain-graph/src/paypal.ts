@@ -1,14 +1,21 @@
-import { Bytes } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   PaymentCompleted as PaymentCompletedEvent,
-  RequestCreated as RequestCreatedEvent
-} from "../generated/Paypal/Paypal"
-import { History, CurrentRequests } from "../generated/schema"
+  RequestCreated as RequestCreatedEvent,
+} from "../generated/Paypal/Paypal";
+import { CurrentRequest, History } from "../generated/schema";
 
 export function handleRequestCreated(event: RequestCreatedEvent): void {
-  let currentRequest = CurrentRequests.load(generateIdForCreateRequest(event.params.requestor, event.params.requestedTo));
-  if (!currentRequest){
-    currentRequest = new CurrentRequests(generateIdForCreateRequest(event.params.requestor, event.params.requestedTo));
+  let currentRequest = CurrentRequest.load(
+    generateIdForCreateRequest(event.params.requestor, event.params.requestedTo)
+  );
+  if (!currentRequest) {
+    currentRequest = new CurrentRequest(
+      generateIdForCreateRequest(
+        event.params.requestor,
+        event.params.requestedTo
+      )
+    );
   }
   currentRequest.sender = event.params.requestor;
   currentRequest.receiver = event.params.requestedTo;
@@ -20,12 +27,14 @@ export function handleRequestCreated(event: RequestCreatedEvent): void {
 }
 
 export function handlePaymentCompleted(event: PaymentCompletedEvent): void {
-  let currentRequest = CurrentRequests.load(generateIdForCreateRequest(event.params.to, event.params.from));
-  if (currentRequest){
+  let currentRequest = CurrentRequest.load(
+    generateIdForCreateRequest(event.params.to, event.params.from)
+  );
+  if (currentRequest) {
     currentRequest.active = false;
     currentRequest.save();
   }
-  let history = new History(generateIdForHistory());
+  let history = new History(generateIdForHistory(event));
 
   // For Paying Account
   history.ownAccountNumber = event.params.from;
@@ -50,7 +59,7 @@ function generateIdForCreateRequest(sender: Bytes, receiver: Bytes): string {
   return `${sender}~~${receiver}`;
 }
 
-function generateIdForHistory(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+function generateIdForHistory(event: PaymentCompletedEvent): string {
+  let currentTimeStamp: BigInt = event.block.timestamp;
+  return currentTimeStamp.toString() + Math.random().toString(36).substr(2);
 }
-

@@ -8,6 +8,7 @@ require("hardhat-deploy");
 const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
+const POLYGON_MUMBAI_RPC_URL = process.env.POLYGON_MUMBAI_RPC_URL || "";
 
 module.exports = {
   defaultNetwork: "hardhat",
@@ -22,6 +23,12 @@ module.exports = {
       url: SEPOLIA_RPC_URL,
       accounts: [PRIVATE_KEY],
       chainId: 11155111,
+      blockConfirmations: 6,
+    },
+    mumbai: {
+      url: POLYGON_MUMBAI_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 80001,
       blockConfirmations: 6,
     },
   },

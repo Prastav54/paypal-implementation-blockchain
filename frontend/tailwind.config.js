@@ -4,6 +4,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      borderWidth: {
+        b: "2px",
+      },
       colors: {
         primary: {
           DEFAULT: "#842E66",
@@ -25,6 +28,9 @@ module.exports = {
         albertSans: ["Albert Sans", "sans-serif"],
       },
     },
+  },
+  corePlugins: {
+    preflight: false,
   },
   plugins: [],
 };

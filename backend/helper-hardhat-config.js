@@ -5,6 +5,9 @@ const networkConfig = {
   11155111: {
     name: "sepolia",
   },
+  80001: {
+    name: "mumbai",
+  },
 };
 
 const developmentChains = ["hardhat", "localhost"];
@@ -19,5 +22,5 @@ module.exports = {
   developmentChains,
   VERIFICATION_BLOCK_CONFIRMATIONS,
   FRONT_END_ABI_FILE_LOCATION,
-  FRONT_END_ADDRESS_FILE_LOCATION
+  FRONT_END_ADDRESS_FILE_LOCATION,
 };

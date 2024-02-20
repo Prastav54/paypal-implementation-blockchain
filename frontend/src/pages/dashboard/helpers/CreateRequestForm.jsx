@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
+import { useNotification } from "web3uikit";
 import { FormModal } from "../../../components/form-modal";
 import { Input } from "../../../components/input";
 import { NumberInput } from "../../../components/number-input";
+import { SUCCESS, SUCCESS_MESSAGE } from "../../../constants/appConstants";
 import { useCreateRequest } from "../../../hooks/useCreateRequest";
 import { handleError } from "../../../utils/apputils";
-import { useNotification } from "web3uikit";
-import { SUCCESS, SUCCESS_MESSAGE } from "../../../constants/appConstants";
 
 export const CreateRequestForm = ({
   openModal,

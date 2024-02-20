@@ -3,7 +3,7 @@ import {
   PaymentCompleted as PaymentCompletedEvent,
   RequestCreated as RequestCreatedEvent,
 } from "../generated/Paypal/Paypal";
-import { CurrentRequest, History } from "../generated/schema";
+import { History, CurrentRequest } from "../generated/schema";
 
 export function handleRequestCreated(event: RequestCreatedEvent): void {
   let currentRequest = CurrentRequest.load(
@@ -61,5 +61,5 @@ function generateIdForCreateRequest(sender: Bytes, receiver: Bytes): string {
 
 function generateIdForHistory(event: PaymentCompletedEvent): string {
   let currentTimeStamp: BigInt = event.block.timestamp;
-  return currentTimeStamp.toString() + Math.random().toString(36).substr(2);
+  return currentTimeStamp.toString();
 }

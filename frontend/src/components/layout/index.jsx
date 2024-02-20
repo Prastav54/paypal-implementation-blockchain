@@ -2,10 +2,10 @@
 import { Layout as AntLayout, Grid } from "antd";
 import classNames from "classnames";
 import React from "react";
+import { useMoralis } from "react-moralis";
+import { POLYGON_MUMBAI_CHAIN_ID } from "../../constants/appConstants";
 import { Navbar } from "./helper/navbar";
 import { Sider } from "./helper/sider";
-import { useMoralis } from "react-moralis";
-import Addresses from "../../constants/addresses.json";
 
 export const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -17,7 +17,7 @@ export const Layout = ({ children }) => {
 
   const { account, chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  const showSidebar = account && Object.keys(Addresses).includes(`${chainId}`);
+  const showSidebar = account && chainId === POLYGON_MUMBAI_CHAIN_ID;
 
   return (
     <>

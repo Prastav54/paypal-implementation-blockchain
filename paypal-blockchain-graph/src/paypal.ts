@@ -34,25 +34,29 @@ export function handlePaymentCompleted(event: PaymentCompletedEvent): void {
     currentRequest.active = false;
     currentRequest.save();
   }
-  let history = new History(generateIdForHistory(event));
+  let dataId = generateIdForHistory(event);
+  let historyForPayingAccount = new History(dataId);
 
   // For Paying Account
-  history.ownAccountNumber = event.params.from;
-  history.otherAccountNumber = event.params.to;
-  history.otherAccountName = event.params.receiverName;
-  history.amount = event.params.amount;
-  history.action = "Send";
-  history.message = event.params.message;
+  historyForPayingAccount.ownAccountNumber = event.params.from;
+  historyForPayingAccount.otherAccountNumber = event.params.to;
+  historyForPayingAccount.otherAccountName = event.params.receiverName;
+  historyForPayingAccount.amount = event.params.amount;
+  historyForPayingAccount.action = "Send";
+  historyForPayingAccount.message = event.params.message;
+  historyForPayingAccount.save();
 
+  dataId = dataId + "rec";
+
+  let historyForReceivingAccount = new History(dataId);
   // For Receiving Account
-  history.ownAccountNumber = event.params.to;
-  history.otherAccountNumber = event.params.from;
-  history.otherAccountName = event.params.senderName;
-  history.amount = event.params.amount;
-  history.action = "Receive";
-  history.message = event.params.message;
-
-  history.save();
+  historyForReceivingAccount.ownAccountNumber = event.params.to;
+  historyForReceivingAccount.otherAccountNumber = event.params.from;
+  historyForReceivingAccount.otherAccountName = event.params.senderName;
+  historyForReceivingAccount.amount = event.params.amount;
+  historyForReceivingAccount.action = "Receive";
+  historyForReceivingAccount.message = event.params.message;
+  historyForReceivingAccount.save();
 }
 
 function generateIdForCreateRequest(sender: Bytes, receiver: Bytes): string {

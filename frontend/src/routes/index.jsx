@@ -1,14 +1,13 @@
 import { useMoralis } from "react-moralis";
 import { useRoutes } from "react-router-dom";
-import Addresses from "../constants/addresses.json";
+import { POLYGON_MUMBAI_CHAIN_ID } from "../constants/appConstants";
 import { ProtectedRoutes } from "./protected";
 import { PublicRoutes } from "./public";
 
 export const AppRoutes = () => {
   const { account, chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  const routingCondition =
-    account && Object.keys(Addresses).includes(`${chainId}`);
+  const routingCondition = account && chainId === POLYGON_MUMBAI_CHAIN_ID;
 
   const routes = routingCondition ? ProtectedRoutes : PublicRoutes;
 

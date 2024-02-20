@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
+import { LoadingOutlined } from "@ant-design/icons";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { App as AntdApp, Button, ConfigProvider } from "antd";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { MoralisProvider } from "react-moralis";
 import { BrowserRouter as Router } from "react-router-dom";
 import { NotificationProvider } from "web3uikit";
 import { Layout } from "../components/layout";
-import { App as AntdApp, Button, ConfigProvider } from "antd";
 import { antdThemeConfig } from "../config/antd";
-import { LoadingOutlined } from "@ant-design/icons";
 
 const ErrorFallback = () => {
   return (
@@ -35,7 +35,7 @@ const InProgressComponent = () => {
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: import.meta.env.VITE_SUBGRAPH_URL,
+  uri: import.meta.env.VITE_SUBGRAPH_URL_MUMBAI,
 });
 
 export const AppProvider = ({ children }) => {

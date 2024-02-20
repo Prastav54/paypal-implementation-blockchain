@@ -1,0 +1,29 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Paypal
+    network: sepolia
+    source:
+      address: "0x5B02C5947355520C1c8a3C888FF0A29cEc168BAd"
+      abi: Paypal
+      startBlock: 5320605
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PaymentCompleted
+        - RequestCreated
+      abis:
+        - name: Paypal
+          file: ./abis/Paypal.json
+      eventHandlers:
+        - event: PaymentCompleted(address,address,uint256,string,string,string)
+          handler: handlePaymentCompleted
+        - event: RequestCreated(address,address,(uint256,string,string,bool))
+          handler: handleRequestCreated
+      file: ./src/paypal.ts

@@ -8,8 +8,8 @@ export const NoticePage = () => {
           <img src={notice} className="w-96" alt="notice image" />
           <p className="my-6  text-[#1E1E1E] text-base font-albert font-normal">
             Before starting, please connect your wallet and make sure you have
-            connected to the correct blockchain. For now we only support Sepolia
-            network.
+            connected to the correct blockchain. For now we only support Polygon
+            Mumbai network.
           </p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { PlusOutlined, EditOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, WalletOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { AddNameForm } from "./helpers/AddNameForm";
 import { useGetName } from "../../hooks/useGetName";
@@ -8,21 +8,39 @@ import { CreateRequestForm } from "./helpers/CreateRequestForm";
 import { Tabs } from "antd";
 import { PendingRequests } from "./helpers/PendingRequests";
 import { IncomingRequests } from "./helpers/IncomingRequests";
+import { useGetCollectedAmount } from "../../hooks/useGetCollectedAmount";
+import { ethers } from "ethers";
+import { useWithdrawAmount } from "../../hooks/useWithDrawAmount";
+import { handleError } from "../../utils/apputils";
+import { SUCCESS, SUCCESS_MESSAGE } from "../../constants/appConstants";
+import { useNotification } from "web3uikit";
 
 export const Dashboard = () => {
   const [openAddNameModal, setOpenAddNameModal] = useState(false);
   const [openCreateRequestModal, setOpenCreateRequestModal] = useState(false);
+  const [refetchPendingRequest, setRefetchPendingRequest] = useState(false);
+  const [collectedAmount, setCollectedAmount] = useState();
+  const [loading, setLoading] = useState(false);
   const [nameDetails, setNameDetails] = useState({});
   const { account } = useOutletContext();
   const { getName } = useGetName();
+  const { getCollectedAmount } = useGetCollectedAmount();
+  const { withdrawAmount } = useWithdrawAmount();
+  const dispatch = useNotification();
 
   useEffect(() => {
     getAccountHolderName();
+    getTotalAmountCollected();
   }, [account]);
 
   const getAccountHolderName = async () => {
     const response = await getName();
     setNameDetails(response);
+  };
+
+  const getTotalAmountCollected = async () => {
+    const response = await getCollectedAmount();
+    setCollectedAmount(response);
   };
 
   const handleAddName = () => {
@@ -45,13 +63,43 @@ export const Dashboard = () => {
     setOpenCreateRequestModal(false);
   };
 
-  const handleCreateRequestSuccess = () => {};
+  const handleCreateRequestSuccess = () => {
+    setRefetchPendingRequest(true);
+  };
+
+  const handleWithDrawSuccess = async (tx) => {
+    await tx.wait(1);
+    dispatch({
+      type: SUCCESS,
+      message: "Amount Withdrawn Successfully",
+      title: SUCCESS_MESSAGE,
+      position: "topR",
+    });
+    setLoading(false);
+    getTotalAmountCollected();
+  };
+
+  const handleWithdrawAmount = () => {
+    setLoading(true);
+    withdrawAmount({
+      onError: (error) => {
+        setLoading(false);
+        handleError(error, dispatch);
+      },
+      onSuccess: (tx) => handleWithDrawSuccess(tx),
+    });
+  };
 
   const tabItems = [
     {
       key: "1",
       label: `Pending Requests`,
-      children: <PendingRequests />,
+      children: (
+        <PendingRequests
+          refetchData={refetchPendingRequest}
+          setRefetchData={setRefetchPendingRequest}
+        />
+      ),
     },
     {
       key: "2",
@@ -73,7 +121,21 @@ export const Dashboard = () => {
             style={{ fontSize: "20px" }}
           />
         </div>
-        <div className="p-2">
+        <div className="flex p-2 space-x-2">
+          <Button
+            icon={<WalletOutlined />}
+            className="flex h-auto items-center px-3 py-1.5 shadow-none"
+            onClick={handleWithdrawAmount}
+            disabled={!+collectedAmount?.toString()}
+            loading={loading}
+          >
+            Withdraw{" "}
+            {` ${
+              +collectedAmount
+                ? ethers.utils.formatUnits(collectedAmount, "ether")
+                : ""
+            } MATIC`}
+          </Button>
           <Button
             icon={<PlusOutlined />}
             className="flex h-auto items-center px-3 py-1.5 shadow-none"

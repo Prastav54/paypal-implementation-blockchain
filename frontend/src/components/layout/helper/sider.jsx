@@ -33,7 +33,7 @@ export const Sider = ({ closeMenu }) => {
         },
       }}
     >
-      <Menu defaultSelectedKeys={["dashboard"]} items={items} />
+      <Menu items={items} />
     </ConfigProvider>
   );
 };
